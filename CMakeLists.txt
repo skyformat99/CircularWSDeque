@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.11)
+project(CircularWSDeque)
+add_subdirectory(include)
+enable_testing()
+add_subdirectory(test)
