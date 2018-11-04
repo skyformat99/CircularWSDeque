@@ -9,7 +9,7 @@ template <typename T> class CircularWSDeque
 	const static T Empty = T();
 	const static T Abort = T();
 
-	CircularWSDeque(long log_initial_size)
+	CircularWSDeque(long log_initial_size = 5)
 	    : bottom_(0), top_(0), log_initial_size_(log_initial_size),
 	      active_array_(CircularArray<T>(log_initial_size))
 	{

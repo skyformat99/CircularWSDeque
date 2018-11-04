@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.11)
+include_directories(${ROOT}/include) 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+add_executable(ConcurrencyTest ConcurrencyTest.cpp)
+target_link_libraries(ConcurrencyTest Threads::Threads)
