@@ -72,10 +72,29 @@ template <typename T> class CircularArray
 		return a;
 	}
 
+	CircularArray<T>
+	shrink_new(long b, long t)
+	{
+		CircularArray<T> a(log_size_ - 1);
+		for (long i = t; i < b; ++i) {
+			a.put(i, segment_[i % size()]);
+		}
+		return a;
+	}
+
 	CircularArray<T> &
 	grow_self(long b, long t)
 	{
 		log_size_ += 1;
+		real_size_ = 1 << log_size_;
+		segment_.resize(real_size_, T());
+		return *this;
+	}
+
+	CircularArray<T> &
+	shrink_self(long b, long t)
+	{
+		log_size_ -= 1;
 		real_size_ = 1 << log_size_;
 		segment_.resize(real_size_, T());
 		return *this;

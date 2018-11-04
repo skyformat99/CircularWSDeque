@@ -90,3 +90,24 @@ BOOST_AUTO_TEST_CASE(CircularArrayGrowsNewReplace)
 	BOOST_CHECK_EQUAL(c.size(), 4);
 	BOOST_CHECK_EQUAL(successes, 2);
 }
+
+BOOST_AUTO_TEST_CASE(CircularArrayShrinks)
+{
+	CircularArray<int> c(8);
+	c.put(0, 10);
+	c.put(1, 13);
+	BOOST_CHECK_EQUAL(c[0], 10);
+	BOOST_CHECK_EQUAL(c[1], 13);
+	BOOST_CHECK_EQUAL(c.size(), 256); // 2^8
+	BOOST_TEST_MESSAGE("c's old size: " << c.size());
+	c = c.shrink_self(2, 0);
+	BOOST_TEST_MESSAGE("c's new size: " << c.size());
+	int successes = 0;
+	for (int i = 0; i < c.size(); ++i) {
+		if (c[i] == 10 || c[i] == 13) {
+			successes += 1;
+		}
+	}
+	BOOST_CHECK_EQUAL(c.size(), 128); // 2^7
+	BOOST_CHECK_EQUAL(successes, 2);
+}

@@ -19,6 +19,14 @@ template <typename T> class CircularWSDeque
 	{
 	}
 
+#if defined(UNIT_TEST)
+	int
+	storage_size()
+	{
+		return active_array_.size();
+	}
+#endif
+
 	void
 	push_bottom(T o)
 	{
@@ -75,8 +83,10 @@ template <typename T> class CircularWSDeque
 			return Empty;
 		}
 		T o = a[b];
-		if (size > 0)
+		if (size > 0) {
+			perhaps_shrink(b, t);
 			return o;
+		}
 
 		if (!cas_top_(t, t + 1))
 			o = Empty;
@@ -85,12 +95,25 @@ template <typename T> class CircularWSDeque
 		return o;
 	}
 
+	void
+	perhaps_shrink(long b, long t)
+	{
+		auto &a = active_array_;
+		if (b - t < a.size() / K) {
+			auto &aa = a.shrink_self(b, t);
+			active_array_ = aa;
+		}
+	}
+
   private:
 	std::mutex cas_mutex_;
 
-	const int log_initial_size_ = 64;
-	std::atomic<long> bottom_ = 0;
-	std::atomic<long> top_ = 0;
+	const int log_initial_size_;
+
+	const static int K = 3; // shrink constant factor
+
+	std::atomic<long> bottom_;
+	std::atomic<long> top_;
 
 	// mutex for the circular array because it's not trivially copyable
 	CircularArray<T> active_array_;

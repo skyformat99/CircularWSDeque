@@ -29,6 +29,7 @@ function(add_boost_test SOURCE_FILE_NAME DEPENDENCY_LIB)
 endfunction()
 
 cmake_minimum_required(VERSION 3.11)
+add_definitions(-DUNIT_TEST)
 find_package(Boost
              COMPONENTS system
                         filesystem
